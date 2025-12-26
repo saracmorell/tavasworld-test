@@ -1601,3 +1601,123 @@ main {
 .hero-section.tw-surface {
   overflow: hidden;
 }
+/* ==========================================================
+   Tavas World Premium + Ambient Liquid Background (Global)
+   Paste at END of assets/css/style.css
+   ========================================================== */
+
+:root{
+  --tw-bg0:#070b10;
+  --tw-bg1:#0b1a22;
+  --tw-ink:#1e1e1e;
+  --tw-surface:#ffffff;
+  --tw-surfaceTint: rgba(255,255,255,.86);
+  --tw-line: rgba(0,0,0,.08);
+  --tw-shadow: 0 30px 70px rgba(0,0,0,.18);
+  --tw-radius: 18px;
+
+  /* Your accent */
+  --tw-gold:#d1bfa7;
+
+  /* Liquid intensity controls */
+  --tw-liquid-opacity: .60;
+  --tw-liquid-blur: 16px;
+}
+
+/* Base page tone */
+body{
+  background:
+    radial-gradient(1100px 620px at 15% 18%, rgba(120,255,220,.16), transparent 60%),
+    radial-gradient(900px 520px at 85% 22%, rgba(90,140,255,.14), transparent 62%),
+    radial-gradient(800px 620px at 50% 90%, rgba(255,160,210,.08), transparent 62%),
+    linear-gradient(180deg, #e9f0f2 0%, #c9d6dc 100%);
+  color: #2c2c2c;
+}
+
+/* ==========================================================
+   Global Ambient Layer (sits BEHIND your content)
+   Add <div class="tw-liquid-global"></div> near top of <body>
+   ========================================================== */
+
+.tw-liquid-global{
+  position: fixed;
+  inset: -12%;
+  z-index: 0;
+  pointer-events: none;
+
+  /* “Liquid paint” */
+  background:
+    radial-gradient(900px 520px at var(--mx,50%) var(--my,50%), rgba(120,255,220,.22), transparent 62%),
+    radial-gradient(820px 520px at calc(var(--mx,50%) + 16%) calc(var(--my,50%) + 10%), rgba(90,140,255,.20), transparent 64%),
+    radial-gradient(820px 520px at calc(var(--mx,50%) - 18%) calc(var(--my,50%) + 16%), rgba(255,160,210,.10), transparent 64%),
+    radial-gradient(900px 620px at 50% 70%, rgba(0,0,0,.10), transparent 70%);
+  opacity: var(--tw-liquid-opacity);
+
+  transform: translate3d(var(--px,0px), var(--py,0px), 0) scale(1.03);
+  filter: blur(var(--tw-liquid-blur));
+  transition: opacity .25s ease, filter .25s ease;
+}
+
+/* Only show “extra liquid energy” while hovering the page */
+body.tw-liquid-on .tw-liquid-global{
+  opacity: .78;
+  filter: blur(12px);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .tw-liquid-global{ transition:none; }
+  body.tw-liquid-on .tw-liquid-global{ opacity: var(--tw-liquid-opacity); }
+}
+
+/* ==========================================================
+   Premium Surface Wrapper (white card around your inner content)
+   Wrap your main content in <div class="tw-surface"> ... </div>
+   ========================================================== */
+
+.tw-surface{
+  position: relative;
+  z-index: 1; /* above the background */
+  width: min(1000px, calc(100% - 40px));
+  margin: 34px auto 0 auto;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: var(--tw-radius);
+  box-shadow: var(--tw-shadow);
+  padding: 34px 34px 18px 34px;
+  backdrop-filter: blur(6px);
+}
+
+@media (max-width: 768px){
+  .tw-surface{
+    width: calc(100% - 24px);
+    padding: 22px 18px 12px 18px;
+    border-radius: 16px;
+  }
+}
+
+/* ==========================================================
+   Hero polish (keeps your hero looking premium)
+   ========================================================== */
+
+.hero-section{
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgba(0,0,0,.25);
+  border: 1px solid rgba(0,0,0,.18);
+}
+
+.hero-liquid{
+  will-change: transform;
+}
+
+/* Make sure footer sits above the global background */
+.footer-section{
+  position: relative;
+  z-index: 1;
+}
+
+/* Optional: tighten your nav underline color to match gold */
+.navbar>ul>li>a:before{
+  background-color: var(--tw-gold);
+}
