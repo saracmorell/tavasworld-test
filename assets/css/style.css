@@ -1555,3 +1555,49 @@ footer, .footer-section{
     margin: 0 14px;
   }
 }
+/* =========================================================
+   Tavas World, Living Water Background (intent-based)
+   Add this at the VERY BOTTOM of assets/css/style.css
+   ========================================================= */
+
+/* Make sure page can host a fixed canvas behind everything */
+html, body {
+  height: 100%;
+}
+
+/* Fixed canvas behind the site */
+#tw-liquid-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.55;            /* adjust: 0.35 to 0.75 */
+  filter: saturate(1.1) contrast(1.05);
+}
+
+/* Optional: soften the overall page to feel "immersive" */
+body {
+  background: transparent;  /* lets the canvas show through */
+}
+
+/* Give your main content a clean readable surface */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Add a gentle "glass" surface behind content (subtle) */
+.tw-surface {
+  background: rgba(255, 253, 248, 0.88);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.12);
+}
+
+/* Your hero can sit on a surface too if you want */
+.hero-section.tw-surface {
+  overflow: hidden;
+}
