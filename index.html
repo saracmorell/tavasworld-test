@@ -333,76 +333,111 @@
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/typed.js/typed.umd.js"></script>
 
-  <script>
-    // Typed text
-    const typedItems = document
-      .querySelector('.typed')
-      .getAttribute('data-typed-items')
-      .split(',')
-      .map(s => s.trim());
+ <script>
+  // Typed text
+  const typedEl = document.querySelector('.typed');
+  const typedItems = typedEl.getAttribute('data-typed-items').split(',').map(s => s.trim());
+  new Typed('.typed', { strings: typedItems, typeSpeed: 80, backSpeed: 40, backDelay: 2000, loop: true });
 
-    new Typed('.typed', {
-      strings: typedItems,
-      typeSpeed: 80,
-      backSpeed: 40,
-      backDelay: 2000,
-      loop: true
-    });
+  // Mobile nav toggle
+  document.querySelector('.mobile-nav-toggle').addEventListener('click', function () {
+    document.querySelector('#navbar ul').classList.toggle('show');
+  });
 
-    // Mobile nav toggle functionality
-    document.querySelector('.mobile-nav-toggle').addEventListener('click', function () {
-      document.querySelector('#navbar ul').classList.toggle('show');
-    });
+  // Liquid effect (ONLY ON HOVER)
+  (function () {
+    const hero = document.querySelector(".hero-section");
+    const liquid = document.querySelector(".hero-liquid");
+    const turb = document.getElementById("twTurbulence");
+    const disp = document.getElementById("twDisplace");
+    if (!hero || !liquid || !turb || !disp) return;
 
-    // Liquid mouse movement effect
-    (function () {
-      const hero = document.querySelector(".hero-section");
-      const liquid = document.querySelector(".hero-liquid");
-      const turb = document.getElementById("twTurbulence");
-      const disp = document.getElementById("twDisplace");
+    // Respect reduced motion
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      if (!hero || !liquid || !turb || !disp) return;
+    // Skip on touch devices
+    const isCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    if (isCoarse) return;
 
-      let mx = 50, my = 50;
-      let tx = 50, ty = 50;
-      let t = 0;
+    let running = false;
+    let rafId = null;
 
-      function onMove(e) {
-        const r = hero.getBoundingClientRect();
-        const x = ((e.clientX - r.left) / r.width) * 100;
-        const y = ((e.clientY - r.top) / r.height) * 100;
-        tx = Math.max(0, Math.min(100, x));
-        ty = Math.max(0, Math.min(100, y));
-      }
+    let mx = 50, my = 50;
+    let tx = 50, ty = 50;
 
-      hero.addEventListener("mousemove", onMove, { passive: true });
+    let lastMove = 0;
+    function onMove(e) {
+      const now = performance.now();
+      if (now - lastMove < 20) return;
+      lastMove = now;
 
-      function tick() {
+      const r = hero.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width) * 100;
+      const y = ((e.clientY - r.top) / r.height) * 100;
+      tx = Math.max(0, Math.min(100, x));
+      ty = Math.max(0, Math.min(100, y));
+    }
+
+    let t = 0;
+    let lastFilterUpdate = 0;
+
+    function tick(now) {
+      if (!running) return;
+
+      mx += (tx - mx) * 0.06;
+      my += (ty - my) * 0.06;
+
+      liquid.style.setProperty("--mx", mx + "%");
+      liquid.style.setProperty("--my", my + "%");
+
+      const px = (mx - 50) * -0.08;
+      const py = (my - 50) * -0.06;
+      liquid.style.setProperty("--px", px + "px");
+      liquid.style.setProperty("--py", py + "px");
+
+      if (now - lastFilterUpdate > 50) {
+        lastFilterUpdate = now;
         t += 0.004;
 
-        mx += (tx - mx) * 0.06;
-        my += (ty - my) * 0.06;
-
-        liquid.style.setProperty("--mx", mx + "%");
-        liquid.style.setProperty("--my", my + "%");
-
-        const px = (mx - 50) * -0.10;
-        const py = (my - 50) * -0.08;
-        liquid.style.setProperty("--px", px + "px");
-        liquid.style.setProperty("--py", py + "px");
-
-        const bf = 0.010 + Math.sin(t) * 0.0020;
+        const bf = 0.008 + Math.sin(t) * 0.0012;
         turb.setAttribute("baseFrequency", bf.toFixed(4));
 
-        const sc = 18 + (Math.sin(t * 1.7) * 6) + (Math.abs(mx - 50) + Math.abs(my - 50)) * 0.06;
+        const sc = 10 + (Math.abs(mx - 50) + Math.abs(my - 50)) * 0.03;
         disp.setAttribute("scale", sc.toFixed(0));
-
-        requestAnimationFrame(tick);
       }
 
-      tick();
-    })();
-  </script>
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      hero.addEventListener("mousemove", onMove, { passive: true });
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function stop() {
+      running = false;
+      hero.removeEventListener("mousemove", onMove);
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+
+      // Reset to calm state
+      tx = 50; ty = 50;
+      mx = 50; my = 50;
+      liquid.style.setProperty("--mx", "50%");
+      liquid.style.setProperty("--my", "50%");
+      liquid.style.setProperty("--px", "0px");
+      liquid.style.setProperty("--py", "0px");
+      turb.setAttribute("baseFrequency", "0.008");
+      disp.setAttribute("scale", "10");
+    }
+
+    hero.addEventListener("mouseenter", start);
+    hero.addEventListener("mouseleave", stop);
+  })();
+</script>
+
 </body>
 
 </html>
