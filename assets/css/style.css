@@ -1376,3 +1376,182 @@ footer .credits a { color: #fff; }
 @media (max-width: 480px) {
   .footer-acronym { line-height: 1.8; }
 }
+/* ==========================================================
+   TAVAS WORLD, AMBIENT WATER THEME (append at END of file)
+   ========================================================== */
+
+/* Brand variables */
+:root{
+  --tw-bg: #0b0f12;          /* deep night */
+  --tw-surface: rgba(255,255,255,.06);
+  --tw-text: #eaf2ee;
+  --tw-muted: rgba(234,242,238,.72);
+
+  --tw-accent: #2f6f4e;      /* river green */
+  --tw-accent2: #3d8a62;     /* brighter green */
+  --tw-glow: rgba(120,255,220,.22);
+  --tw-blue: rgba(90,140,255,.20);
+  --tw-warm: rgba(255,180,120,.12);
+
+  --tw-shadow: 0 18px 40px rgba(0,0,0,.35);
+  --tw-radius: 18px;
+}
+
+/* Global background + typography baseline */
+html { overflow-x: hidden; }
+body{
+  background: var(--tw-bg);
+  color: var(--tw-text);
+}
+
+/* Links */
+a{ color: var(--tw-text); }
+a:hover{ color: rgba(120,255,220,.90); }
+
+/* Make template white cards look like “glass” */
+.box-shadow-full,
+.card-blog,
+.work-box,
+.service-box,
+.post-box,
+.form-comments,
+.box-comments,
+.widget-sidebar{
+  background: var(--tw-surface) !important;
+  color: var(--tw-text) !important;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: var(--tw-radius);
+  box-shadow: var(--tw-shadow);
+}
+
+/* Headings on dark theme */
+h1,h2,h3,h4,h5,h6{
+  color: var(--tw-text);
+}
+
+/* ----------------------------------------------------------
+   Site-wide ambient “water light” layer
+   Add <div class="site-ambient"></div> right after <body>
+   ---------------------------------------------------------- */
+.site-ambient{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .22;
+
+  background:
+    radial-gradient(900px 520px at 18% 30%, var(--tw-glow), transparent 60%),
+    radial-gradient(900px 540px at 82% 18%, var(--tw-blue), transparent 58%),
+    radial-gradient(760px 560px at 55% 78%, var(--tw-warm), transparent 62%);
+
+  filter: blur(18px);
+  transform: translateZ(0);
+  animation: twAmbientDrift 10s ease-in-out infinite alternate;
+}
+
+@keyframes twAmbientDrift{
+  from { transform: translate3d(-6px, -8px, 0) scale(1.02); }
+  to   { transform: translate3d(8px, 6px, 0) scale(1.03); }
+}
+
+/* Ensure content sits above ambient layer */
+header#header, main, footer{
+  position: relative;
+  z-index: 1;
+}
+
+/* Reduced motion = no ambient movement */
+@media (prefers-reduced-motion: reduce){
+  .site-ambient{ animation: none; }
+}
+
+/* ----------------------------------------------------------
+   Header, nav polish for dark theme
+   ---------------------------------------------------------- */
+#header{
+  background: rgba(0,0,0,.70);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+#header.header-scrolled{
+  background: rgba(0,0,0,.86);
+}
+
+/* Nav underline glow */
+.navbar>ul>li>a:before{
+  background-color: rgba(120,255,220,.85);
+}
+
+/* ----------------------------------------------------------
+   Your custom HERO SECTION (index.html uses .hero-section)
+   ---------------------------------------------------------- */
+.hero-section{
+  height: 360px;
+  border-radius: var(--tw-radius);
+  overflow: hidden;
+  margin: 0 auto;
+  max-width: 1100px;
+
+  background-size: cover;
+  background-position: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  color: #fff;
+
+  position: relative;
+  box-shadow: var(--tw-shadow);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.hero-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(900px 450px at 50% 40%, rgba(0,0,0,.10), rgba(0,0,0,.60));
+  z-index: 1;
+}
+
+.hero-section h1,
+.hero-subtitle,
+.tagline{
+  position: relative;
+  z-index: 2;
+}
+
+/* Typed headline glow */
+.typed{
+  text-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 18px rgba(120,255,220,.22);
+}
+
+/* ----------------------------------------------------------
+   Optional: if you later use DevFolio .hero again
+   ---------------------------------------------------------- */
+.hero .overlay-itro{
+  background-color: rgba(0,0,0,.55);
+}
+
+/* ----------------------------------------------------------
+   Footer on dark theme
+   ---------------------------------------------------------- */
+footer, .footer-section{
+  background: rgba(0,0,0,.65) !important;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+/* ----------------------------------------------------------
+   Mobile tuning
+   ---------------------------------------------------------- */
+@media (max-width: 768px){
+  .hero-section{
+    height: 320px;
+    margin: 0 14px;
+  }
+}
